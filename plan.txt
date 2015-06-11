@@ -1,0 +1,5 @@
+1- Extract Text
+2- divide text into keyphrases (use a combination of stopwords and delimiters)
+3- find all words in the keyphrases
+4- for each word, calculate the degree and frequency of their appearance in the keyphrases
+5- for each keyphrase, calculate the sum of the scores of its components. 
