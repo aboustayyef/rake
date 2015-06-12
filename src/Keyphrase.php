@@ -9,6 +9,7 @@
  class Keyphrase {
     public $keyphrase;
     public $id;
+    public $score = [];
 
     public function __construct($id, $keyphrase){
       $this->id = $id;
