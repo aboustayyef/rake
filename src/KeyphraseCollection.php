@@ -56,7 +56,7 @@ class KeyphraseCollection extends \SplQueue{
         foreach ($this->words as $key2 => $word2) {
           $combination[$word1][$word2] = 0;
           foreach ($this as $keyphrase) {
-            if ((strpos($keyphrase->keyphrase, $word1) !== false) && (strpos($keyphrase->keyphrase,$word2) !== false)) {
+            if ((@strpos($keyphrase->keyphrase, $word1) !== false) && (@strpos($keyphrase->keyphrase,$word2) !== false)) {
               $combination[$word1][$word2] += 1;
             }
           }

@@ -1,24 +1,33 @@
 <?php namespace Aboustayyef;
 /**
  *  Extracts the content
+ *  (A wrapper around Readability)
  */
 class Document
 {
   public $text;
 
-  function __construct($instantiationMethod = "fromText", $argument= "At GitHub, we're building the text editor we've always wanted. A tool you can customize to do anything, but also use productively on the first day without ever touching a config file. Atom is modern, approachable, and hackable to the core. We cant wait to see what you build with it.") {
+  function __construct($instantiationMethod = "fromText", $argument= "Lawyer Rania Ghaith was stuck at a red light on Monday in front of one of those convoys at the Qantari intersection that leads up to Hamra.When the light turned green, she let the convoy pass and would have been on her way hadn’t that policeman, who was NOT a traffic policeman and as such had no place to regulate traffic, pulled her over.  Of course, this shouldn’t come as a shock in a country of no law, misogyny, and in the presence of people who think they are always above the law and who have no problem in making sure you know it at every single second of every day.Let me take this a step further: how horrifying is it that this policeman not only assaulted that woman for not breaking the law, but has been declared innocent and is back on the streets, ready to attack other women, and other people on a whim?You should not accept for Rania Ghaith to become yet another victim of abuse by those who are above the law, and who have the political backing to spit in her face during her trial: “If I were in my friend’s place, I would’ve torn you to pieces.” This is not a country, this is a jungle.") {
     if ($instantiationMethod == "fromText") {
       $this->text = $argument;
+      $this->text = html_entity_decode($this->text);
+      return true;
+    } else if ($instantiationMethod == "fromUrl"){
+      $doc = new Extractor($argument);
+      $this->text = $doc->getTitle() . $doc->getText();
+      $this->text = html_entity_decode($this->text);
       return true;
     }
     // To Do: Instantiation from URL
     return false;
   }
 
-  public function keyphrases($stopwords = array("a", "about", "above", "above", "across", "after", "afterwards", "again", "against", "all", "almost", "alone", "along", "already", "also","although","always","am","among", "amongst", "amoungst", "amount",  "an", "and", "another", "any","anyhow","anyone","anything","anyway", "anywhere", "are", "around", "as",  "at", "back","be","became", "because","become","becomes", "becoming", "been", "before", "beforehand", "behind", "being", "below", "beside", "besides", "between", "beyond", "bill", "both", "bottom","but", "by", "call", "can", "cannot", "cant", "co", "con", "could", "couldnt", "cry", "de", "describe", "detail", "do", "done", "down", "due", "during", "each", "eg", "eight", "either", "eleven","else", "elsewhere", "empty", "enough", "etc", "even", "ever", "every", "everyone", "everything", "everywhere", "except", "few", "fifteen", "fify", "fill", "find", "fire", "first", "five", "for", "former", "formerly", "forty", "found", "four", "from", "front", "full", "further", "get", "give", "go", "had", "has", "hasnt", "have", "he", "hence", "her", "here", "hereafter", "hereby", "herein", "hereupon", "hers", "herself", "him", "himself", "his", "how", "however", "hundred", "ie", "if", "in", "inc", "indeed", "interest", "into", "is", "it", "its", "itself", "keep", "last", "latter", "latterly", "least", "less", "ltd", "made", "many", "may", "me", "meanwhile", "might", "mill", "mine", "more", "moreover", "most", "mostly", "move", "much", "must", "my", "myself", "name", "namely", "neither", "never", "nevertheless", "next", "nine", "no", "nobody", "none", "noone", "nor", "not", "nothing", "now", "nowhere", "of", "off", "often", "on", "once", "one", "only", "onto", "or", "other", "others", "otherwise", "our", "ours", "ourselves", "out", "over", "own","part", "per", "perhaps", "please", "put", "rather", "re", "same", "see", "seem", "seemed", "seeming", "seems", "serious", "several", "she", "should", "show", "side", "since", "sincere", "six", "sixty", "so", "some", "somehow", "someone", "something", "sometime", "sometimes", "somewhere", "still", "such", "system", "take", "ten", "than", "that", "the", "their", "them", "themselves", "then", "thence", "there", "thereafter", "thereby", "therefore", "therein", "thereupon", "these", "they", "thickv", "thin", "third", "this", "those", "though", "three", "through", "throughout", "thru", "thus", "to", "together", "too", "top", "toward", "towards", "twelve", "twenty", "two", "un", "under", "until", "up", "upon", "us", "very", "via", "was", "we", "well", "were", "what", "whatever", "when", "whence", "whenever", "where", "whereafter", "whereas", "whereby", "wherein", "whereupon", "wherever", "whether", "which", "while", "whither", "who", "whoever", "whole", "whom", "whose", "why", "will", "with", "within", "without", "would", "yet", "you", "your", "yours", "yourself", "yourselves", "the")){
-
+  public function keyphrases($stopwords = null){
       // Returns a collection of Keyphrases;
 
+      if (!$stopwords) {
+        $stopwords = (new Stoplist)->get();
+      }
       // split by punctuation delimiters into sentences
       $pattern =  '/[.!?,;:\t\-\"\(\)\']/';
       $sentences = preg_split( $pattern, $this->text );

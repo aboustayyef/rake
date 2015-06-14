@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "fivefilters/php-readability": "1.0"
+      "aboustayyef/extractor": "dev-master"
     },
     "require-dev": {
         "phpspec/phpspec": "2.2.*"
